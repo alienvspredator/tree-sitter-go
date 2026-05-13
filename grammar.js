@@ -90,7 +90,6 @@ module.exports = grammar({
     [$.qualified_type, $._expression],
     [$.generic_type, $._simple_type],
     [$.parameter_declaration, $._simple_type],
-    [$.type_parameter_declaration, $._simple_type, $._expression],
     [$.type_parameter_declaration, $._expression],
     [$.type_parameter_declaration, $._simple_type, $.generic_type, $._expression],
   ],
@@ -108,7 +107,6 @@ module.exports = grammar({
 
   supertypes: $ => [
     $._expression,
-    $._type,
     $._simple_type,
     $._statement,
     $._simple_statement,
@@ -389,7 +387,26 @@ module.exports = grammar({
           )),
         ),
       ),
-      field('tag', optional($._string_literal)),
+      field('tag', optional($.struct_tag)),
+    ),
+
+    struct_tag: $ => choice(
+      seq(
+        '`',
+        repeat(choice(
+          $.struct_tag_pair,
+          alias(token.immediate(prec(-1, /\s+/)), $.raw_string_literal_content),
+          alias(token.immediate(prec(-1, /[^`\s\p{XID_Start}_]+/)), $.raw_string_literal_content),
+          alias(token.immediate(prec(-1, /[_\p{XID_Start}][_\p{XID_Continue}]*/)), $.raw_string_literal_content),
+        )),
+        token.immediate('`'),
+      ),
+      $.interpreted_string_literal,
+    ),
+
+    struct_tag_pair: $ => seq(
+      field('key', alias(token.immediate(/[_\p{XID_Start}][_\p{XID_Continue}]*:/), $.tag_name)),
+      field('value', $.interpreted_string_literal),
     ),
 
     interface_type: $ => seq(
@@ -692,6 +709,7 @@ module.exports = grammar({
     call_expression: $ => prec(PREC.primary, choice(
       seq(
         field('function', alias(choice('new', 'make'), $.identifier)),
+        field('type_arguments', optional($.type_arguments)),
         field('arguments', alias($.special_argument_list, $.argument_list)),
       ),
       seq(
@@ -709,7 +727,10 @@ module.exports = grammar({
     special_argument_list: $ => seq(
       '(',
       optional(seq(
-        $._type,
+        choice(
+          prec.dynamic(PREC.primary, $._type),
+          $._expression,
+        ),
         repeat(seq(',', $._expression)),
         optional(','),
       )),
@@ -767,8 +788,20 @@ module.exports = grammar({
       ')',
     )),
 
-    type_conversion_expression: $ => prec.dynamic(-1, seq(
-      field('type', $._type),
+    type_conversion_expression: $ => prec(-1, seq(
+      field('type', choice(
+        prec.dynamic(-1, $._type_identifier),
+        prec.dynamic(-1, $.qualified_type),
+        $.struct_type,
+        $.interface_type,
+        $.array_type,
+        $.slice_type,
+        prec.dynamic(3, $.map_type),
+        $.channel_type,
+        $.function_type,
+        $.negated_type,
+        $.parenthesized_type,
+      )),
       '(',
       field('operand', $._expression),
       optional(','),
@@ -870,18 +903,33 @@ module.exports = grammar({
 
     raw_string_literal: $ => seq(
       '`',
-      alias(token(prec(1, /[^`]*/)), $.raw_string_literal_content),
-      '`',
+      repeat(choice(
+        alias(token.immediate(prec(1, /[^`%]+/)), $.raw_string_literal_content),
+        $.format_specifier,
+        alias(token.immediate('%'), $.raw_string_literal_content),
+      )),
+      token.immediate('`'),
     ),
 
     interpreted_string_literal: $ => seq(
       '"',
       repeat(choice(
-        alias(token.immediate(prec(1, /[^"\n\\]+/)), $.interpreted_string_literal_content),
+        alias(token.immediate(prec(1, /[^"\n\\%]+/)), $.interpreted_string_literal_content),
         $.escape_sequence,
+        $.format_specifier,
+        alias(token.immediate('%'), $.interpreted_string_literal_content),
       )),
       token.immediate('"'),
     ),
+
+    format_specifier: _ => token.immediate(seq(
+      '%',
+      optional(seq('[', /\d+/, ']')),
+      repeat(choice('+', '-', '#', ' ', '0')),
+      optional(choice('*', /\d+/)),
+      optional(seq('.', optional(choice('*', /\d+/)))),
+      choice('v', 'T', 't', 'b', 'c', 'd', 'o', 'O', 'q', 'x', 'X', 'U', 'e', 'E', 'f', 'F', 'g', 'G', 's', 'p', 'w', '%'),
+    )),
 
     escape_sequence: _ => token.immediate(seq(
       '\\',

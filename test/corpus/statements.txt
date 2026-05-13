@@ -876,7 +876,8 @@ func main() {
                                     (field_identifier))
                                   (argument_list
                                     (interpreted_string_literal
-                                      (interpreted_string_literal_content))
+                                      (interpreted_string_literal_content)
+                                      (format_specifier))
                                     (index_expression
                                       (identifier)
                                       (identifier)))))))))))

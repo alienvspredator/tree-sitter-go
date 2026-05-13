@@ -107,6 +107,8 @@
 
 (escape_sequence) @escape
 
+(format_specifier) @string.special
+
 [
   (int_literal)
   (float_literal)
