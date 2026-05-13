@@ -1,41 +1,44 @@
 {
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
   "grammars": [
     {
       "name": "go",
       "camelcase": "Go",
+      "title": "Go",
       "scope": "source.go",
-      "path": ".",
       "file-types": [
         "go"
       ],
+      "injection-regex": "^go$",
+      "class-name": "TreeSitterGo",
       "highlights": "queries/highlights.scm",
       "tags": "queries/tags.scm"
     }
   ],
   "metadata": {
-    "version": "0.25.0",
+    "version": "0.26.0",
     "license": "MIT",
     "description": "Go grammar for tree-sitter",
     "authors": [
       {
-        "name": "Max Brunsfeld",
-        "email": "maxbrunsfeld@gmail.com"
-      },
-      {
-        "name": "Amaan Qureshi",
-        "email": "amaanq12@gmail.com"
+        "name": "Danylo Shevchenko",
+        "url": "https://github.com/alienvspredator",
+        "email": "work@s-danylo.com"
       }
     ],
     "links": {
-      "repository": "https://github.com/tree-sitter/tree-sitter-go"
+      "repository": "https://github.com/alienvspredator/tree-sitter-go",
+      "funding": ""
     }
   },
   "bindings": {
     "c": true,
     "go": true,
+    "java": false,
     "node": true,
     "python": true,
     "rust": true,
-    "swift": true
+    "swift": true,
+    "zig": true
   }
 }

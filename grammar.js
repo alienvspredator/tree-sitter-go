@@ -64,7 +64,7 @@ const floatLiteral = choice(decimalFloatLiteral, hexFloatLiteral);
 
 const imaginaryLiteral = seq(choice(decimalDigits, intLiteral, floatLiteral), 'i');
 
-module.exports = grammar({
+export default grammar({
   name: 'go',
 
   extras: $ => [
