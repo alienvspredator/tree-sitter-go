@@ -90,6 +90,7 @@ export default grammar({
     [$.qualified_type, $._expression],
     [$.generic_type, $._simple_type],
     [$.parameter_declaration, $._simple_type],
+    [$.parameter_declaration, $.parenthesized_type],
     [$.type_parameter_declaration, $._expression],
     [$.type_parameter_declaration, $._simple_type, $.generic_type, $._expression],
   ],
@@ -221,7 +222,7 @@ export default grammar({
       field('name', $.identifier),
       field('type_parameters', optional($.type_parameter_list)),
       field('parameters', $.parameter_list),
-      field('result', optional(choice($.parameter_list, $._simple_type))),
+      field('result', optional(choice($.parameter_list, $._type))),
       field('body', optional($.block)),
     )),
 
@@ -230,7 +231,7 @@ export default grammar({
       field('receiver', $.parameter_list),
       field('name', $._field_identifier),
       field('parameters', $.parameter_list),
-      field('result', optional(choice($.parameter_list, $._simple_type))),
+      field('result', optional(choice($.parameter_list, $._type))),
       field('body', optional($.block)),
     )),
 
@@ -359,7 +360,7 @@ export default grammar({
 
     negated_type: $ => prec.left(seq(
       '~',
-      $._type,
+      $._simple_type,
     )),
 
     field_declaration_list: $ => seq(
@@ -428,7 +429,7 @@ export default grammar({
     method_elem: $ => seq(
       field('name', $._field_identifier),
       field('parameters', $.parameter_list),
-      field('result', optional(choice($.parameter_list, $._simple_type))),
+      field('result', optional(choice($.parameter_list, $._type))),
     ),
 
     type_elem: $ => sep1($._type, '|'),
@@ -450,7 +451,7 @@ export default grammar({
     function_type: $ => prec.right(seq(
       'func',
       field('parameters', $.parameter_list),
-      field('result', optional(choice($.parameter_list, $._simple_type))),
+      field('result', optional(choice($.parameter_list, $._type))),
     )),
 
     block: $ => seq(
@@ -684,6 +685,7 @@ export default grammar({
       $.type_assertion_expression,
       $.type_conversion_expression,
       $.type_instantiation_expression,
+      $.blank_identifier,
       $.identifier,
       alias(choice('new', 'make'), $.identifier),
       $.composite_literal,
@@ -792,6 +794,7 @@ export default grammar({
       field('type', choice(
         prec.dynamic(-1, $._type_identifier),
         prec.dynamic(-1, $.qualified_type),
+        $.pointer_type,
         $.struct_type,
         $.interface_type,
         $.array_type,
@@ -855,7 +858,7 @@ export default grammar({
     func_literal: $ => seq(
       'func',
       field('parameters', $.parameter_list),
-      field('result', optional(choice($.parameter_list, $._simple_type))),
+      field('result', optional(choice($.parameter_list, $._type))),
       field('body', $.block),
     ),
 

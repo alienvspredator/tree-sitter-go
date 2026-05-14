@@ -645,7 +645,7 @@
                     },
                     {
                       "type": "SYMBOL",
-                      "name": "_simple_type"
+                      "name": "_type"
                     }
                   ]
                 },
@@ -723,7 +723,7 @@
                     },
                     {
                       "type": "SYMBOL",
-                      "name": "_simple_type"
+                      "name": "_type"
                     }
                   ]
                 },
@@ -1589,7 +1589,7 @@
           },
           {
             "type": "SYMBOL",
-            "name": "_type"
+            "name": "_simple_type"
           }
         ]
       }
@@ -2037,7 +2037,7 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "_simple_type"
+                    "name": "_type"
                   }
                 ]
               },
@@ -2216,7 +2216,7 @@
                     },
                     {
                       "type": "SYMBOL",
-                      "name": "_simple_type"
+                      "name": "_type"
                     }
                   ]
                 },
@@ -3493,6 +3493,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "blank_identifier"
+        },
+        {
+          "type": "SYMBOL",
           "name": "identifier"
         },
         {
@@ -4095,6 +4099,10 @@
                 },
                 {
                   "type": "SYMBOL",
+                  "name": "pointer_type"
+                },
+                {
+                  "type": "SYMBOL",
                   "name": "struct_type"
                 },
                 {
@@ -4444,7 +4452,7 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "_simple_type"
+                    "name": "_type"
                   }
                 ]
               },
@@ -7491,6 +7499,10 @@
     [
       "parameter_declaration",
       "_simple_type"
+    ],
+    [
+      "parameter_declaration",
+      "parenthesized_type"
     ],
     [
       "type_parameter_declaration",

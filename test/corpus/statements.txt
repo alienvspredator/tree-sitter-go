@@ -366,6 +366,8 @@ loop2:
     a(x)
     break
   }
+
+  for range y {}
 }
 
 --------------------------------------------------------------------------------
@@ -447,7 +449,12 @@ loop2:
                   (identifier)
                   (argument_list
                     (identifier))))
-              (break_statement))))))))
+              (break_statement))))
+        (for_statement
+          (range_clause
+            (identifier))
+          (block))))))
+
 
 ================================================================================
 Switch statements

@@ -8,6 +8,10 @@
         "named": true
       },
       {
+        "type": "blank_identifier",
+        "named": true
+      },
+      {
         "type": "call_expression",
         "named": true
       },
@@ -1068,6 +1072,10 @@
           {
             "type": "parameter_list",
             "named": true
+          },
+          {
+            "type": "parenthesized_type",
+            "named": true
           }
         ]
       }
@@ -1118,6 +1126,10 @@
           {
             "type": "parameter_list",
             "named": true
+          },
+          {
+            "type": "parenthesized_type",
+            "named": true
           }
         ]
       },
@@ -1157,6 +1169,10 @@
           },
           {
             "type": "parameter_list",
+            "named": true
+          },
+          {
+            "type": "parenthesized_type",
             "named": true
           }
         ]
@@ -1631,6 +1647,10 @@
           {
             "type": "parameter_list",
             "named": true
+          },
+          {
+            "type": "parenthesized_type",
+            "named": true
           }
         ]
       }
@@ -1671,6 +1691,10 @@
           {
             "type": "parameter_list",
             "named": true
+          },
+          {
+            "type": "parenthesized_type",
+            "named": true
           }
         ]
       }
@@ -1686,10 +1710,6 @@
       "types": [
         {
           "type": "_simple_type",
-          "named": true
-        },
-        {
-          "type": "parenthesized_type",
           "named": true
         }
       ]
@@ -2380,6 +2400,10 @@
           },
           {
             "type": "parenthesized_type",
+            "named": true
+          },
+          {
+            "type": "pointer_type",
             "named": true
           },
           {
