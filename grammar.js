@@ -93,6 +93,7 @@ export default grammar({
     [$.parameter_declaration, $.parenthesized_type],
     [$.type_parameter_declaration, $._expression],
     [$.type_parameter_declaration, $._simple_type, $.generic_type, $._expression],
+    [$._type_switch_header, $._expression],
   ],
 
   reserved: {
@@ -184,7 +185,7 @@ export default grammar({
     ),
 
     const_spec: $ => prec.left(seq(
-      field('name', commaSep1($.identifier)),
+      field('name', commaSep1(choice($.blank_identifier, $.identifier))),
       optional(seq(
         optional(field('type', $._type)),
         '=',
@@ -201,7 +202,7 @@ export default grammar({
     ),
 
     var_spec: $ => seq(
-      commaSep1(field('name', $.identifier)),
+      commaSep1(field('name', choice($.blank_identifier, $.identifier))),
       choice(
         seq(
           field('type', $._type),
@@ -243,7 +244,7 @@ export default grammar({
     ),
 
     type_parameter_declaration: $ => seq(
-      commaSep1(field('name', $.identifier)),
+      commaSep1(field('name', choice($.blank_identifier, $.identifier))),
       field('type', alias($.type_elem, $.type_constraint)),
     ),
 
@@ -257,12 +258,12 @@ export default grammar({
     ),
 
     parameter_declaration: $ => seq(
-      commaSep(field('name', $.identifier)),
+      commaSep(field('name', choice($.blank_identifier, $.identifier))),
       field('type', $._type),
     ),
 
     variadic_parameter_declaration: $ => seq(
-      field('name', optional($.identifier)),
+      field('name', optional(choice($.blank_identifier, $.identifier))),
       '...',
       field('type', $._type),
     ),
@@ -646,7 +647,7 @@ export default grammar({
         field('initializer', $._simple_statement),
         ';',
       )),
-      optional(seq(field('alias', $.expression_list), ':=')),
+      optional(seq(field('alias', $.identifier), ':=')),
       field('value', $._expression),
       '.',
       '(',
@@ -656,7 +657,7 @@ export default grammar({
 
     type_case: $ => seq(
       'case',
-      field('type', commaSep1($._type)),
+      field('type', commaSep1(choice($._type, $.nil))),
       ':',
       optional($.statement_list),
     ),

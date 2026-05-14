@@ -583,11 +583,10 @@ func main() {
             (statement_list
               (break_statement))))
         (type_switch_statement
-          alias: (expression_list
-            (identifier))
+          alias: (identifier)
           value: (identifier)
           (type_case
-            type: (type_identifier)
+            type: (nil)
             (statement_list
               (expression_statement
                 (call_expression
